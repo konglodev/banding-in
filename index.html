@@ -100,15 +100,23 @@
                         Ketik kode angka (cth: <strong>001</strong>) atau nama barang di bawah untuk langsung ke link Shopee termurah!
                     </p>
                 </div>
-                <!-- Social Pills di Mobile -->
-                <div id="banner-socials" class="flex flex-wrap items-center gap-2">
-                    <!-- Tombol sosmed aktif dari admin -->
-                </div>
             </div>
             <!-- Decorative circles -->
             <div class="absolute -right-8 -bottom-12 w-40 h-40 bg-white/10 rounded-full blur-2xl"></div>
             <div class="absolute right-20 -top-10 w-24 h-24 bg-fuchsia-400/20 rounded-full blur-xl"></div>
         </div>
+
+        <!-- Section Akun Media Sosial (Instagram, TikTok, YouTube) -->
+        <section id="social-media-section" class="hidden bg-white rounded-2xl border border-slate-200/80 p-3.5 sm:p-4 shadow-2xs">
+            <div class="flex items-center justify-between mb-2.5">
+                <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+                    <i data-lucide="sparkles" class="w-3.5 h-3.5 text-brand-500"></i> Ikuti Konten & Spill Terbaru
+                </span>
+            </div>
+            <div id="social-cards-grid" class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+                <!-- Kartu Instagram, TikTok, YouTube dirender otomatis di sini -->
+            </div>
+        </section>
 
         <!-- Sticky Search & Category Filter -->
         <div class="sticky top-16 z-30 bg-slate-50/95 backdrop-blur-sm pt-2 pb-3 space-y-3">
@@ -256,7 +264,7 @@
                 </button>
             </div>
             <h3 class="font-display font-bold text-lg text-slate-900">Admin banding.in</h3>
-            <p class="text-xs text-slate-500 mt-1 mb-4">Masukkan PIN untuk mengakses halaman Admin!</p>
+           <p class="text-xs text-slate-500 mt-1 mb-4">Masukkan PIN untuk mengakses halaman Admin!</p>
             
             <form onsubmit="handleAdminLogin(event)" class="space-y-4">
                 <div>
@@ -608,12 +616,43 @@
             document.getElementById('pin-hint').textContent = storeSettings.adminPin === '1234' ? '1234' : '****';
 
             const socials = [];
-            if (storeSettings.tiktok) socials.push({ name: 'TikTok', url: storeSettings.tiktok, icon: 'music-2' });
-            if (storeSettings.instagram) socials.push({ name: 'Instagram', url: storeSettings.instagram, icon: 'instagram' });
-            if (storeSettings.youtube) socials.push({ name: 'YouTube', url: storeSettings.youtube, icon: 'youtube' });
+            if (storeSettings.instagram) {
+                socials.push({
+                    name: 'Instagram',
+                    handle: extractSocialHandle(storeSettings.instagram, '@banding.in'),
+                    url: storeSettings.instagram,
+                    icon: 'instagram',
+                    gradient: 'from-amber-500 via-rose-500 to-purple-600',
+                    bgSoft: 'bg-rose-50/70 hover:bg-rose-50 border-rose-200/70',
+                    textAccent: 'text-rose-600'
+                });
+            }
+            if (storeSettings.tiktok) {
+                socials.push({
+                    name: 'TikTok',
+                    handle: extractSocialHandle(storeSettings.tiktok, '@banding.in'),
+                    url: storeSettings.tiktok,
+                    icon: 'music-2',
+                    gradient: 'from-slate-900 via-slate-800 to-cyan-600',
+                    bgSoft: 'bg-slate-100/80 hover:bg-slate-100 border-slate-200/80',
+                    textAccent: 'text-slate-800'
+                });
+            }
+            if (storeSettings.youtube) {
+                socials.push({
+                    name: 'YouTube',
+                    handle: extractSocialHandle(storeSettings.youtube, 'banding.in'),
+                    url: storeSettings.youtube,
+                    icon: 'youtube',
+                    gradient: 'from-red-600 to-rose-600',
+                    bgSoft: 'bg-red-50/70 hover:bg-red-50 border-red-200/70',
+                    textAccent: 'text-red-600'
+                });
+            }
 
             const headerSocialContainer = document.getElementById('header-socials');
-            const bannerSocialContainer = document.getElementById('banner-socials');
+            const socialSection = document.getElementById('social-media-section');
+            const socialCardsGrid = document.getElementById('social-cards-grid');
 
             headerSocialContainer.innerHTML = socials.map(s => `
                 <a href="${s.url}" target="_blank" rel="noopener noreferrer" title="${s.name}"
@@ -622,15 +661,43 @@
                 </a>
             `).join('');
 
-            bannerSocialContainer.innerHTML = socials.map(s => `
-                <a href="${s.url}" target="_blank" rel="noopener noreferrer"
-                   class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white text-xs font-semibold transition-all">
-                    <i data-lucide="${s.icon}" class="w-3.5 h-3.5"></i>
-                    <span>${s.name}</span>
-                </a>
-            `).join('');
+            if (socials.length === 0) {
+                socialSection.classList.add('hidden');
+            } else {
+                socialSection.classList.remove('hidden');
+                // Sesuaikan jumlah kolom grid agar tetap proporsional (1, 2, atau 3 sosmed aktif)
+                socialCardsGrid.className = `grid grid-cols-1 ${socials.length === 2 ? 'sm:grid-cols-2' : socials.length >= 3 ? 'sm:grid-cols-3' : 'sm:grid-cols-1'} gap-2.5`;
+
+                socialCardsGrid.innerHTML = socials.map(s => `
+                    <a href="${s.url}" target="_blank" rel="noopener noreferrer"
+                       class="group flex items-center justify-between p-2.5 rounded-xl border ${s.bgSoft} transition-all duration-200 active:scale-98">
+                        <div class="flex items-center gap-2.5 min-w-0">
+                            <div class="w-9 h-9 rounded-xl bg-gradient-to-tr ${s.gradient} text-white flex items-center justify-center shrink-0 shadow-2xs group-hover:scale-105 transition-transform">
+                                <i data-lucide="${s.icon}" class="w-4 h-4"></i>
+                            </div>
+                            <div class="min-w-0">
+                                <p class="font-display font-bold text-xs text-slate-900 leading-tight">${s.name}</p>
+                                <p class="text-[11px] font-medium ${s.textAccent} truncate">${s.handle}</p>
+                            </div>
+                        </div>
+                        <i data-lucide="arrow-up-right" class="w-4 h-4 text-slate-400 group-hover:text-slate-700 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform shrink-0"></i>
+                    </a>
+                `).join('');
+            }
 
             lucide.createIcons();
+        }
+
+        // Helper mengekstrak username dari URL sosmed secara otomatis
+        function extractSocialHandle(url, fallback) {
+            try {
+                const cleanUrl = url.replace(/\/+$/, '');
+                const lastSegment = cleanUrl.split('/').pop().split('?')[0];
+                if (!lastSegment) return fallback;
+                return lastSegment.startsWith('@') ? lastSegment : `@${lastSegment}`;
+            } catch {
+                return fallback;
+            }
         }
 
         // --- 5. EVENT LISTENERS (SEARCH & INFINITE SCROLL) ---
