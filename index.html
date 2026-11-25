@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>banding.in - Rekomendasi Shopee Pilihan</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/jpeg" href="https://scontent.cdninstagram.com/v/t51.82787-19/871382059_18101008061345218_3680342510568263170_n.jpg?stp=dst-jpg_s150x150_tt6&_nc_cat=100&ig_cache_key=GCs88DPCrZJbxU5AAALOMJoDNBMzbmNDAQAB1501500j-ccb7-5&ccb=7-5&_nc_sid=669407&efg=eyJ2ZW5jb2RlX3RhZyI6InByb2ZpbGVfcGljLnd3dy4xMDgwLkMzIn0%3D&_nc_ohc=bZH87oxbMDUQ7kNvwHy9Tjq&_nc_oc=Adq9Bitqs8r2RcxoF5yC3DCuY7O2ZBt13IUxKF24B0s-w26iiO9InmddmbRqlIVjl_k&_nc_zt=24&_nc_ht=scontent.cdninstagram.com&_nc_gid=U8OI6F6eAg6ZI6Q959IQqA&_nc_ss=7bb8c&_nc_ct=RQosPBUCFQIAAAA&oh=00_AQS4pFwwtEMyY4ApWi0QVtcbZhTx3nEh-We8B3DNCh-QTA&oe=6B0CBB87">
+    <link rel="apple-touch-icon" href="https://scontent.cdninstagram.com/v/t51.82787-19/871382059_18101008061345218_3680342510568263170_n.jpg?stp=dst-jpg_s150x150_tt6&_nc_cat=100&ig_cache_key=GCs88DPCrZJbxU5AAALOMJoDNBMzbmNDAQAB1501500j-ccb7-5&ccb=7-5&_nc_sid=669407&efg=eyJ2ZW5jb2RlX3RhZyI6InByb2ZpbGVfcGljLnd3dy4xMDgwLkMzIn0%3D&_nc_ohc=bZH87oxbMDUQ7kNvwHy9Tjq&_nc_oc=Adq9Bitqs8r2RcxoF5yC3DCuY7O2ZBt13IUxKF24B0s-w26iiO9InmddmbRqlIVjl_k&_nc_zt=24&_nc_ht=scontent.cdninstagram.com&_nc_gid=U8OI6F6eAg6ZI6Q959IQqA&_nc_ss=7bb8c&_nc_ct=RQosPBUCFQIAAAA&oh=00_AQS4pFwwtEMyY4ApWi0QVtcbZhTx3nEh-We8B3DNCh-QTA&oe=6B0CBB87">
+    
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts: Plus Jakarta Sans & Inter -->
@@ -55,7 +59,7 @@
             <!-- Brand / Profile -->
             <div class="flex items-center gap-3 cursor-pointer" onclick="switchView('store')">
                 <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-brand-600 to-fuchsia-500 p-0.5 shadow-sm shrink-0">
-                    <img id="header-avatar" src="https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?auto=format&fit=crop&w=150&q=80" 
+                    <img id="header-avatar" src="https://scontent.cdninstagram.com/v/t51.82787-19/871382059_18101008061345218_3680342510568263170_n.jpg?stp=dst-jpg_s150x150_tt6&_nc_cat=100&ig_cache_key=GCs88DPCrZJbxU5AAALOMJoDNBMzbmNDAQAB1501500j-ccb7-5&ccb=7-5&_nc_sid=669407&efg=eyJ2ZW5jb2RlX3RhZyI6InByb2ZpbGVfcGljLnd3dy4xMDgwLkMzIn0%3D&_nc_ohc=bZH87oxbMDUQ7kNvwHy9Tjq&_nc_oc=Adq9Bitqs8r2RcxoF5yC3DCuY7O2ZBt13IUxKF24B0s-w26iiO9InmddmbRqlIVjl_k&_nc_zt=24&_nc_ht=scontent.cdninstagram.com&_nc_gid=U8OI6F6eAg6ZI6Q959IQqA&_nc_ss=7bb8c&_nc_ct=RQosPBUCFQIAAAA&oh=00_AQS4pFwwtEMyY4ApWi0QVtcbZhTx3nEh-We8B3DNCh-QTA&oe=6B0CBB87" 
                          alt="banding.in" 
                          onerror="this.src='https://placehold.co/150x150/4f46e5/ffffff?text=B'"
                          class="w-full h-full object-cover rounded-full border-2 border-white">
@@ -106,7 +110,7 @@
             <div class="absolute right-20 -top-10 w-24 h-24 bg-fuchsia-400/20 rounded-full blur-xl"></div>
         </div>
 
-        <!-- Section Akun Media Sosial (Instagram, TikTok, YouTube) -->
+        <!-- Section Akun Media Sosial (Tampil otomatis jika ada data di Firebase) -->
         <section id="social-media-section" class="hidden bg-white rounded-2xl border border-slate-200/80 p-3.5 sm:p-4 shadow-2xs">
             <div class="flex items-center justify-between mb-2.5">
                 <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
@@ -187,7 +191,7 @@
                     </div>
                     <p class="text-[11px] sm:text-xs text-slate-500 mt-1">Semua perubahan tersimpan otomatis ke cloud & langsung tampil di perangkat pengunjung.</p>
                 </div>
-                <!-- Tombol Logout khusus Mobile agar baris tombol aksi lebih lega -->
+                <!-- Tombol Logout khusus Mobile -->
                 <button onclick="logoutAdmin()" class="sm:hidden p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-xl border border-slate-200/80 shrink-0 transition-colors" title="Keluar Mode Admin">
                     <i data-lucide="log-out" class="w-4 h-4"></i>
                 </button>
@@ -335,7 +339,7 @@
                     </div>
 
                     <div>
-                        <label class="block text-[11px] font-semibold text-slate-600 mb-1">Link YouTube / Threads / WhatsApp</label>
+                        <label class="block text-[11px] font-semibold text-slate-600 mb-1">Link YouTube</label>
                         <input type="url" id="set-youtube" placeholder="https://youtube.com/@channel"
                                class="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-brand-500">
                     </div>
@@ -475,7 +479,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, getDoc, setDoc, addDoc, updateDoc, deleteDoc, onSnapshot, collection } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, doc, setDoc, addDoc, updateDoc, deleteDoc, onSnapshot, collection } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // --- 1. KONFIGURASI FIREBASE PROJECT: banding-in-ff162 ---
         const defaultFirebaseConfig = {
@@ -499,13 +503,14 @@
         const db = getFirestore(app);
 
         // --- 2. STATE MANAGEMENT ---
+        const DEFAULT_AVATAR = 'https://scontent.cdninstagram.com/v/t51.82787-19/871382059_18101008061345218_3680342510568263170_n.jpg?stp=dst-jpg_s150x150_tt6&_nc_cat=100&ig_cache_key=GCs88DPCrZJbxU5AAALOMJoDNBMzbmNDAQAB1501500j-ccb7-5&ccb=7-5&_nc_sid=669407&efg=eyJ2ZW5jb2RlX3RhZyI6InByb2ZpbGVfcGljLnd3dy4xMDgwLkMzIn0%3D&_nc_ohc=bZH87oxbMDUQ7kNvwHy9Tjq&_nc_oc=Adq9Bitqs8r2RcxoF5yC3DCuY7O2ZBt13IUxKF24B0s-w26iiO9InmddmbRqlIVjl_k&_nc_zt=24&_nc_ht=scontent.cdninstagram.com&_nc_gid=U8OI6F6eAg6ZI6Q959IQqA&_nc_ss=7bb8c&_nc_ct=RQosPBUCFQIAAAA&oh=00_AQS4pFwwtEMyY4ApWi0QVtcbZhTx3nEh-We8B3DNCh-QTA&oe=6B0CBB87';
         let currentUser = null;
         let products = [];
-        let likedIds = new Set(); // Disimpan di memori sesi pengunjung
+        let likedIds = new Set();
         let storeSettings = {
             storeName: 'banding.in',
             storeBio: 'Bandingin dulu sebelum checkout Shopee!',
-            storeAvatar: 'https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?auto=format&fit=crop&w=150&q=80',
+            storeAvatar: DEFAULT_AVATAR,
             adminPin: '1234',
             tiktok: '',
             instagram: '',
@@ -522,9 +527,10 @@
         async function initApp() {
             applyStoreSettingsToUI();
             setupEventListeners();
-            lucide.createIcons();
+            if (window.lucide) {
+                lucide.createIcons();
+            }
 
-            // Cek apakah URL dibuka dengan parameter ?admin atau #admin
             checkAdminUrlTrigger();
             window.addEventListener('hashchange', checkAdminUrlTrigger);
 
@@ -548,7 +554,6 @@
             });
         }
 
-        // Deteksi URL Rahasia menuju Admin (?admin atau #admin)
         function checkAdminUrlTrigger() {
             const urlParams = new URLSearchParams(window.location.search);
             const isAdminRoute = urlParams.has('admin') || window.location.hash === '#admin';
@@ -558,12 +563,16 @@
         }
 
         function openLoginModal() {
-            document.getElementById('modal-login').classList.remove('hidden');
-            document.getElementById('modal-login').classList.add('flex');
-            setTimeout(() => document.getElementById('admin-pin-input').focus(), 100);
+            const modal = document.getElementById('modal-login');
+            if (!modal) return;
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            const pinInput = document.getElementById('admin-pin-input');
+            if (pinInput) {
+                setTimeout(() => pinInput.focus(), 100);
+            }
         }
 
-        // Real-time Listener untuk Daftar Produk
         function subscribeToProducts() {
             if (!currentUser) return;
             const productsCol = collection(db, 'artifacts', appId, 'public', 'data', 'products');
@@ -577,24 +586,29 @@
                 fetched.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
                 products = fetched;
 
-                document.getElementById('initial-loader').classList.add('hidden');
-                document.getElementById('product-grid').classList.remove('hidden');
-                document.getElementById('product-grid').classList.add('flex');
+                const initialLoader = document.getElementById('initial-loader');
+                const productGrid = document.getElementById('product-grid');
+                if (initialLoader) initialLoader.classList.add('hidden');
+                if (productGrid) {
+                    productGrid.classList.remove('hidden');
+                    productGrid.classList.add('flex');
+                }
 
                 renderCategories();
                 renderStorefront();
                 if (isAdminLoggedIn) {
                     updateAdminStats();
-                    renderAdminList(document.getElementById('admin-search').value.trim().toLowerCase());
+                    const adminSearch = document.getElementById('admin-search');
+                    renderAdminList(adminSearch ? adminSearch.value.trim().toLowerCase() : '');
                 }
             }, (error) => {
                 console.error("Firestore products error:", error);
-                document.getElementById('initial-loader').classList.add('hidden');
+                const initialLoader = document.getElementById('initial-loader');
+                if (initialLoader) initialLoader.classList.add('hidden');
                 showToast("Gagal memuat produk dari cloud.", "error");
             });
         }
 
-        // Real-time Listener untuk Profil Toko & Media Sosial
         function subscribeToStoreSettings() {
             if (!currentUser) return;
             const settingsDoc = doc(db, 'artifacts', appId, 'public', 'data', 'settings', 'store_profile');
@@ -611,10 +625,16 @@
 
         function applyStoreSettingsToUI() {
             document.title = `${storeSettings.storeName} - Rekomendasi Shopee Pilihan`;
-            document.getElementById('header-store-name').textContent = storeSettings.storeName;
-            document.getElementById('header-store-bio').textContent = storeSettings.storeBio;
-            document.getElementById('header-avatar').src = storeSettings.storeAvatar;
-            document.getElementById('pin-hint').textContent = storeSettings.adminPin === '1234' ? '1234' : '****';
+
+            const nameEl = document.getElementById('header-store-name');
+            const bioEl = document.getElementById('header-store-bio');
+            const avatarEl = document.getElementById('header-avatar');
+            const pinHintEl = document.getElementById('pin-hint');
+
+            if (nameEl) nameEl.textContent = storeSettings.storeName;
+            if (bioEl) bioEl.textContent = storeSettings.storeBio;
+            if (avatarEl) avatarEl.src = storeSettings.storeAvatar || DEFAULT_AVATAR;
+            if (pinHintEl) pinHintEl.textContent = storeSettings.adminPin === '1234' ? '1234' : '****';
 
             const allPlatforms = [
                 {
@@ -643,7 +663,7 @@
                 }
             ];
 
-            // Filter hanya akun media sosial yang datanya terisi di Firebase
+            // Section sosmed hanya tampil jika ada data Instagram, TikTok, atau YouTube di Firebase
             const activeSocials = allPlatforms
                 .filter(item => item.url !== '')
                 .map(item => ({
@@ -655,46 +675,51 @@
             const socialSection = document.getElementById('social-media-section');
             const socialCardsGrid = document.getElementById('social-cards-grid');
 
-            headerSocialContainer.innerHTML = activeSocials.map(s => `
-                <a href="${s.url}" target="_blank" rel="noopener noreferrer" title="${s.name}"
-                   class="p-2 text-slate-600 hover:text-brand-600 hover:bg-brand-50 rounded-full transition-colors">
-                    <i data-lucide="${s.icon}" class="w-4 h-4"></i>
-                </a>
-            `).join('');
-
-            if (activeSocials.length === 0) {
-                socialSection.classList.add('hidden');
-                socialCardsGrid.innerHTML = '';
-            } else {
-                socialSection.classList.remove('hidden');
-                const gridCols = activeSocials.length === 1
-                    ? 'grid-cols-1'
-                    : activeSocials.length === 2
-                        ? 'grid-cols-1 sm:grid-cols-2'
-                        : 'grid-cols-1 sm:grid-cols-3';
-                socialCardsGrid.className = `grid ${gridCols} gap-2.5`;
-
-                socialCardsGrid.innerHTML = activeSocials.map(s => `
-                    <a href="${s.url}" target="_blank" rel="noopener noreferrer"
-                       class="group flex items-center justify-between p-2.5 rounded-xl border ${s.bgSoft} transition-all duration-200 active:scale-98">
-                        <div class="flex items-center gap-2.5 min-w-0">
-                            <div class="w-9 h-9 rounded-xl bg-gradient-to-tr ${s.gradient} text-white flex items-center justify-center shrink-0 shadow-2xs group-hover:scale-105 transition-transform">
-                                <i data-lucide="${s.icon}" class="w-4 h-4"></i>
-                            </div>
-                            <div class="min-w-0">
-                                <p class="font-display font-bold text-xs text-slate-900 leading-tight">${s.name}</p>
-                                <p class="text-[11px] font-medium ${s.textAccent} truncate">${s.handle}</p>
-                            </div>
-                        </div>
-                        <i data-lucide="arrow-up-right" class="w-4 h-4 text-slate-400 group-hover:text-slate-700 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform shrink-0"></i>
+            if (headerSocialContainer) {
+                headerSocialContainer.innerHTML = activeSocials.map(s => `
+                    <a href="${s.url}" target="_blank" rel="noopener noreferrer" title="${s.name}"
+                       class="p-2 text-slate-600 hover:text-brand-600 hover:bg-brand-50 rounded-full transition-colors">
+                        <i data-lucide="${s.icon}" class="w-4 h-4"></i>
                     </a>
                 `).join('');
             }
 
-            lucide.createIcons();
+            if (socialSection && socialCardsGrid) {
+                if (activeSocials.length === 0) {
+                    socialSection.classList.add('hidden');
+                    socialCardsGrid.innerHTML = '';
+                } else {
+                    socialSection.classList.remove('hidden');
+                    const gridCols = activeSocials.length === 1
+                        ? 'grid-cols-1'
+                        : activeSocials.length === 2
+                            ? 'grid-cols-1 sm:grid-cols-2'
+                            : 'grid-cols-1 sm:grid-cols-3';
+                    socialCardsGrid.className = `grid ${gridCols} gap-2.5`;
+
+                    socialCardsGrid.innerHTML = activeSocials.map(s => `
+                        <a href="${s.url}" target="_blank" rel="noopener noreferrer"
+                           class="group flex items-center justify-between p-2.5 rounded-xl border ${s.bgSoft} transition-all duration-200 active:scale-98">
+                            <div class="flex items-center gap-2.5 min-w-0">
+                                <div class="w-9 h-9 rounded-xl bg-gradient-to-tr ${s.gradient} text-white flex items-center justify-center shrink-0 shadow-2xs group-hover:scale-105 transition-transform">
+                                    <i data-lucide="${s.icon}" class="w-4 h-4"></i>
+                                </div>
+                                <div class="min-w-0">
+                                    <p class="font-display font-bold text-xs text-slate-900 leading-tight">${s.name}</p>
+                                    <p class="text-[11px] font-medium ${s.textAccent} truncate">${s.handle}</p>
+                                </div>
+                            </div>
+                            <i data-lucide="arrow-up-right" class="w-4 h-4 text-slate-400 group-hover:text-slate-700 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform shrink-0"></i>
+                        </a>
+                    `).join('');
+                }
+            }
+
+            if (window.lucide) {
+                lucide.createIcons();
+            }
         }
 
-        // Helper Ekstrak @username dari URL Profil Sosmed
         function extractSocialHandle(url, fallback) {
             try {
                 const parsed = new URL(url);
@@ -712,23 +737,30 @@
             const searchInput = document.getElementById('search-input');
             const clearBtn = document.getElementById('clear-search');
             
-            searchInput.addEventListener('input', (e) => {
-                searchQuery = e.target.value.trim().toLowerCase();
-                clearBtn.classList.toggle('hidden', searchQuery === '');
-                visibleCount = 10;
-                renderStorefront();
-            });
+            if (searchInput && clearBtn) {
+                searchInput.addEventListener('input', (e) => {
+                    searchQuery = e.target.value.trim().toLowerCase();
+                    clearBtn.classList.toggle('hidden', searchQuery === '');
+                    visibleCount = 10;
+                    renderStorefront();
+                });
+            }
 
-            document.getElementById('admin-search').addEventListener('input', (e) => {
-                renderAdminList(e.target.value.trim().toLowerCase());
-            });
+            const adminSearch = document.getElementById('admin-search');
+            if (adminSearch) {
+                adminSearch.addEventListener('input', (e) => {
+                    renderAdminList(e.target.value.trim().toLowerCase());
+                });
+            }
 
             window.addEventListener('scroll', () => {
                 const backToTopBtn = document.getElementById('back-to-top');
-                if (window.scrollY > 300) {
-                    backToTopBtn.classList.remove('opacity-0', 'pointer-events-none');
-                } else {
-                    backToTopBtn.classList.add('opacity-0', 'pointer-events-none');
+                if (backToTopBtn) {
+                    if (window.scrollY > 300) {
+                        backToTopBtn.classList.remove('opacity-0', 'pointer-events-none');
+                    } else {
+                        backToTopBtn.classList.add('opacity-0', 'pointer-events-none');
+                    }
                 }
 
                 if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 150) {
@@ -740,7 +772,8 @@
         // --- 6. RENDER STOREFRONT (HALAMAN PENGUNJUNG) ---
         function renderCategories() {
             const container = document.getElementById('category-filters');
-            const categories = ['Semua', '❤️ Favorit', ...new Set(products.map(p => p.category))];
+            if (!container) return;
+            const categories = ['Semua', '❤️ Favorit', ...new Set(products.map(p => p.category).filter(Boolean))];
 
             container.innerHTML = categories.map(cat => {
                 const isActive = selectedCategory === cat;
@@ -749,7 +782,7 @@
                     : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-100';
                 
                 return `
-                    <button onclick="selectCategory('${cat}')" 
+                    <button onclick="selectCategory('${cat.replace(/'/g, "\\'")}')" 
                             class="px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition-all active:scale-95 ${activeClasses}">
                         ${cat}
                     </button>
@@ -766,9 +799,10 @@
 
         function clearSearch() {
             const input = document.getElementById('search-input');
-            input.value = '';
+            const clearBtn = document.getElementById('clear-search');
+            if (input) input.value = '';
             searchQuery = '';
-            document.getElementById('clear-search').classList.add('hidden');
+            if (clearBtn) clearBtn.classList.add('hidden');
             renderStorefront();
         }
 
@@ -803,19 +837,21 @@
             const emptyTitle = document.getElementById('empty-state-title');
             const emptyDesc = document.getElementById('empty-state-desc');
             const emptyBtn = document.getElementById('empty-state-btn');
+            if (!grid || !emptyState) return;
+
             const filtered = getFilteredProducts();
 
             if (filtered.length === 0) {
                 grid.innerHTML = '';
                 emptyState.classList.remove('hidden');
                 if (products.length === 0) {
-                    emptyTitle.textContent = 'Katalog masih kosong';
-                    emptyDesc.textContent = 'Belum ada produk yang ditambahkan ke etalase.';
-                    emptyBtn.classList.add('hidden');
+                    if (emptyTitle) emptyTitle.textContent = 'Katalog masih kosong';
+                    if (emptyDesc) emptyDesc.textContent = 'Belum ada produk yang ditambahkan ke etalase.';
+                    if (emptyBtn) emptyBtn.classList.add('hidden');
                 } else {
-                    emptyTitle.textContent = 'Produk tidak ditemukan';
-                    emptyDesc.textContent = 'Coba gunakan kata kunci lain atau reset filter kategori yang dipilih.';
-                    emptyBtn.classList.remove('hidden');
+                    if (emptyTitle) emptyTitle.textContent = 'Produk tidak ditemukan';
+                    if (emptyDesc) emptyDesc.textContent = 'Coba gunakan kata kunci lain atau reset filter kategori yang dipilih.';
+                    if (emptyBtn) emptyBtn.classList.remove('hidden');
                 }
                 return;
             }
@@ -871,7 +907,9 @@
                 `;
             }).join('');
 
-            lucide.createIcons();
+            if (window.lucide) {
+                lucide.createIcons();
+            }
         }
 
         function loadMoreProducts() {
@@ -879,12 +917,12 @@
             if (visibleCount >= filtered.length) return;
 
             const loader = document.getElementById('scroll-loader');
-            loader.classList.remove('hidden');
+            if (loader) loader.classList.remove('hidden');
 
             setTimeout(() => {
                 visibleCount += 6;
                 renderStorefront();
-                loader.classList.add('hidden');
+                if (loader) loader.classList.add('hidden');
             }, 300);
         }
 
@@ -931,9 +969,13 @@
 
         // --- 8. SISTEM ADMIN & PENGATURAN TOKO ---
         function closeLoginModal() {
-            document.getElementById('modal-login').classList.add('hidden');
-            document.getElementById('modal-login').classList.remove('flex');
-            document.getElementById('admin-pin-input').value = '';
+            const modal = document.getElementById('modal-login');
+            const input = document.getElementById('admin-pin-input');
+            if (modal) {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }
+            if (input) input.value = '';
         }
 
         function handleAdminLogin(e) {
@@ -961,6 +1003,7 @@
         function switchView(view) {
             const storeView = document.getElementById('view-store');
             const adminView = document.getElementById('view-admin');
+            if (!storeView || !adminView) return;
 
             if (view === 'admin') {
                 storeView.classList.add('hidden');
@@ -977,15 +1020,21 @@
         }
 
         function updateAdminStats() {
-            document.getElementById('stat-total-products').textContent = products.length;
+            const elTotalProd = document.getElementById('stat-total-products');
+            const elTotalClicks = document.getElementById('stat-total-clicks');
+            const elTotalCats = document.getElementById('stat-total-categories');
+
+            if (elTotalProd) elTotalProd.textContent = products.length;
             const totalClicks = products.reduce((sum, item) => sum + (item.clicks || 0), 0);
-            document.getElementById('stat-total-clicks').textContent = totalClicks;
-            const uniqueCats = new Set(products.map(p => p.category)).size;
-            document.getElementById('stat-total-categories').textContent = uniqueCats;
+            if (elTotalClicks) elTotalClicks.textContent = totalClicks;
+            const uniqueCats = new Set(products.map(p => p.category).filter(Boolean)).size;
+            if (elTotalCats) elTotalCats.textContent = uniqueCats;
         }
 
         function renderAdminList(filterText = '') {
             const listContainer = document.getElementById('admin-product-list');
+            if (!listContainer) return;
+
             const filtered = products.filter(p => 
                 (p.name || '').toLowerCase().includes(filterText) || 
                 (p.code || '').toLowerCase().includes(filterText) ||
@@ -1025,7 +1074,9 @@
                 </div>
             `).join('');
 
-            lucide.createIcons();
+            if (window.lucide) {
+                lucide.createIcons();
+            }
         }
 
         // --- 9. PENGATURAN PROFIL TOKO & MEDIA SOSIAL ---
@@ -1057,7 +1108,7 @@
                 storeName: document.getElementById('set-store-name').value.trim() || 'banding.in',
                 adminPin: document.getElementById('set-admin-pin').value.trim() || '1234',
                 storeBio: document.getElementById('set-store-bio').value.trim(),
-                storeAvatar: document.getElementById('set-store-avatar').value.trim() || storeSettings.storeAvatar,
+                storeAvatar: document.getElementById('set-store-avatar').value.trim() || DEFAULT_AVATAR,
                 tiktok: document.getElementById('set-tiktok').value.trim(),
                 instagram: document.getElementById('set-instagram').value.trim(),
                 youtube: document.getElementById('set-youtube').value.trim()
@@ -1113,12 +1164,10 @@
         function formatRupiah(value) {
             if (!value) return '';
             const raw = String(value).trim();
-            // Ambil digit angka murni jika input berupa angka/rupiah standar
             const digitsOnly = raw.replace(/[^\d]/g, '');
             if (!digitsOnly) return raw;
             
             const formattedNumber = digitsOnly.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-            // Pertahankan catatan tambahan di belakang angka jika ada (misal: "12500 (Diskon)" -> "Rp.12.500 (Diskon)")
             const suffixMatch = raw.match(/(?:rp\.?\s*)?[\d.,]+\s*(.*)$/i);
             const suffix = suffixMatch && suffixMatch[1] ? ` ${suffixMatch[1].trim()}` : '';
             return `Rp.${formattedNumber}${suffix}`;
@@ -1223,6 +1272,7 @@
         // --- 12. TOAST NOTIFICATION ---
         function showToast(message, type = 'default') {
             const container = document.getElementById('toast-container');
+            if (!container) return;
             const toast = document.createElement('div');
             
             let bgClass = 'bg-slate-900 text-white';
@@ -1268,8 +1318,12 @@
             toggleLike
         });
 
-        // Jalankan aplikasi
-        initApp();
+        // Jalankan aplikasi setelah DOM siap sepenuhnya
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initApp);
+        } else {
+            initApp();
+        }
     </script>
 </body>
 </html>
