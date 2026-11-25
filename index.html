@@ -520,6 +520,7 @@
 
         // --- 3. INISIALISASI FIREBASE AUTH & FIRESTORE LISTENERS ---
         async function initApp() {
+            applyStoreSettingsToUI();
             setupEventListeners();
             lucide.createIcons();
 
@@ -615,60 +616,65 @@
             document.getElementById('header-avatar').src = storeSettings.storeAvatar;
             document.getElementById('pin-hint').textContent = storeSettings.adminPin === '1234' ? '1234' : '****';
 
-            const socials = [];
-            if (storeSettings.instagram) {
-                socials.push({
+            const allPlatforms = [
+                {
                     name: 'Instagram',
-                    handle: extractSocialHandle(storeSettings.instagram, '@banding.in'),
-                    url: storeSettings.instagram,
+                    url: (storeSettings.instagram || '').trim(),
                     icon: 'instagram',
                     gradient: 'from-amber-500 via-rose-500 to-purple-600',
                     bgSoft: 'bg-rose-50/70 hover:bg-rose-50 border-rose-200/70',
                     textAccent: 'text-rose-600'
-                });
-            }
-            if (storeSettings.tiktok) {
-                socials.push({
+                },
+                {
                     name: 'TikTok',
-                    handle: extractSocialHandle(storeSettings.tiktok, '@banding.in'),
-                    url: storeSettings.tiktok,
+                    url: (storeSettings.tiktok || '').trim(),
                     icon: 'music-2',
                     gradient: 'from-slate-900 via-slate-800 to-cyan-600',
                     bgSoft: 'bg-slate-100/80 hover:bg-slate-100 border-slate-200/80',
                     textAccent: 'text-slate-800'
-                });
-            }
-            if (storeSettings.youtube) {
-                socials.push({
+                },
+                {
                     name: 'YouTube',
-                    handle: extractSocialHandle(storeSettings.youtube, 'banding.in'),
-                    url: storeSettings.youtube,
+                    url: (storeSettings.youtube || '').trim(),
                     icon: 'youtube',
                     gradient: 'from-red-600 to-rose-600',
                     bgSoft: 'bg-red-50/70 hover:bg-red-50 border-red-200/70',
                     textAccent: 'text-red-600'
-                });
-            }
+                }
+            ];
+
+            // Filter hanya akun media sosial yang datanya terisi di Firebase
+            const activeSocials = allPlatforms
+                .filter(item => item.url !== '')
+                .map(item => ({
+                    ...item,
+                    handle: extractSocialHandle(item.url, `@${storeSettings.storeName}`)
+                }));
 
             const headerSocialContainer = document.getElementById('header-socials');
             const socialSection = document.getElementById('social-media-section');
             const socialCardsGrid = document.getElementById('social-cards-grid');
 
-            headerSocialContainer.innerHTML = socials.map(s => `
+            headerSocialContainer.innerHTML = activeSocials.map(s => `
                 <a href="${s.url}" target="_blank" rel="noopener noreferrer" title="${s.name}"
                    class="p-2 text-slate-600 hover:text-brand-600 hover:bg-brand-50 rounded-full transition-colors">
                     <i data-lucide="${s.icon}" class="w-4 h-4"></i>
                 </a>
             `).join('');
 
-            if (socials.length === 0) {
+            if (activeSocials.length === 0) {
                 socialSection.classList.add('hidden');
+                socialCardsGrid.innerHTML = '';
             } else {
                 socialSection.classList.remove('hidden');
-                // Sesuaikan jumlah kolom grid agar tetap proporsional (1, 2, atau 3 sosmed aktif)
-                socialCardsGrid.className = `grid grid-cols-1 ${socials.length === 2 ? 'sm:grid-cols-2' : socials.length >= 3 ? 'sm:grid-cols-3' : 'sm:grid-cols-1'} gap-2.5`;
+                const gridCols = activeSocials.length === 1
+                    ? 'grid-cols-1'
+                    : activeSocials.length === 2
+                        ? 'grid-cols-1 sm:grid-cols-2'
+                        : 'grid-cols-1 sm:grid-cols-3';
+                socialCardsGrid.className = `grid ${gridCols} gap-2.5`;
 
-                socialCardsGrid.innerHTML = socials.map(s => `
+                socialCardsGrid.innerHTML = activeSocials.map(s => `
                     <a href="${s.url}" target="_blank" rel="noopener noreferrer"
                        class="group flex items-center justify-between p-2.5 rounded-xl border ${s.bgSoft} transition-all duration-200 active:scale-98">
                         <div class="flex items-center gap-2.5 min-w-0">
@@ -688,16 +694,17 @@
             lucide.createIcons();
         }
 
-        // Helper mengekstrak username dari URL sosmed secara otomatis
+        // Helper Ekstrak @username dari URL Profil Sosmed
         function extractSocialHandle(url, fallback) {
             try {
-                const cleanUrl = url.replace(/\/+$/, '');
-                const lastSegment = cleanUrl.split('/').pop().split('?')[0];
-                if (!lastSegment) return fallback;
-                return lastSegment.startsWith('@') ? lastSegment : `@${lastSegment}`;
-            } catch {
-                return fallback;
-            }
+                const parsed = new URL(url);
+                const segments = parsed.pathname.split('/').filter(Boolean);
+                if (segments.length > 0) {
+                    const last = segments[segments.length - 1];
+                    return last.startsWith('@') ? last : `@${last}`;
+                }
+            } catch (e) {}
+            return fallback;
         }
 
         // --- 5. EVENT LISTENERS (SEARCH & INFINITE SCROLL) ---
@@ -818,49 +825,43 @@
 
             grid.innerHTML = itemsToShow.map((item, idx) => {
                 const isLiked = likedIds.has(item.id);
-                const heartFill = isLiked ? 'fill-rose-500 text-rose-500' : 'text-slate-500';
+                const heartFill = isLiked ? 'fill-rose-500 text-rose-500' : 'text-slate-400 hover:text-rose-500';
+                const displayPrice = item.price ? formatRupiah(item.price) : '';
 
                 return `
-                <article class="group bg-white rounded-2xl border border-slate-200/80 p-3 sm:p-4 shadow-2xs hover:shadow-md hover:border-brand-300 transition-all duration-300 flex items-center justify-between gap-3 sm:gap-4 animate-fade-in-up" style="animation-delay: ${idx * 30}ms">
-                    <!-- Left: Nomor Kode Badge -->
-                    <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-gradient-to-br from-slate-900 via-slate-800 to-brand-900 text-white flex flex-col items-center justify-center shrink-0 shadow-xs group-hover:scale-105 transition-transform">
-                        <span class="text-[9px] font-medium text-indigo-200 uppercase tracking-wider leading-none mb-0.5">Kode</span>
-                        <span class="font-display font-extrabold text-xs sm:text-sm tracking-tight leading-none">#${item.code}</span>
+                <article class="group bg-white rounded-2xl border border-slate-200/80 p-3.5 sm:p-4 shadow-2xs hover:shadow-md hover:border-brand-300 transition-all duration-300 flex items-center justify-between gap-3 sm:gap-4 animate-fade-in-up" style="animation-delay: ${idx * 30}ms">
+                    <!-- Kiri: Badge Nomor / Kode Produk -->
+                    <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-gradient-to-br from-brand-600 to-indigo-600 text-white flex flex-col items-center justify-center shrink-0 shadow-xs shadow-brand-500/20 group-hover:scale-105 transition-transform">
+                        <span class="text-[9px] font-medium uppercase tracking-wider text-indigo-200 leading-none mb-0.5">Kode</span>
+                        <span class="font-display font-extrabold text-sm sm:text-base leading-none">#${item.code}</span>
                     </div>
 
-                    <!-- Middle: Detail Produk -->
+                    <!-- Tengah: Informasi Produk -->
                     <div class="flex-1 min-w-0">
                         <div class="flex flex-wrap items-center gap-1.5 mb-1">
-                            <span class="text-[10px] font-semibold px-2 py-0.5 rounded-md bg-brand-50 text-brand-700 border border-brand-200/60">
+                            <span class="text-[10px] font-semibold px-2 py-0.5 rounded-md bg-slate-100 text-slate-600">
                                 ${item.category}
                             </span>
                             ${item.badge ? `
-                                <span class="text-[10px] font-bold px-2 py-0.5 rounded-md bg-amber-100 text-amber-800 border border-amber-200/80">
+                                <span class="px-2 py-0.5 rounded-md bg-amber-100 text-amber-800 border border-amber-200/80 font-bold text-[10px]">
                                     ${item.badge}
                                 </span>
                             ` : ''}
                         </div>
-
-                        <h3 class="font-semibold text-xs sm:text-sm text-slate-800 line-clamp-2 sm:line-clamp-1 leading-snug group-hover:text-brand-700 transition-colors" title="${item.name}">
+                        <h3 class="font-display font-bold text-xs sm:text-sm text-slate-900 line-clamp-2 leading-snug group-hover:text-brand-600 transition-colors" title="${item.name}">
                             ${item.name}
                         </h3>
-
-                        ${item.price ? `
-                            <p class="font-display font-extrabold text-xs sm:text-sm text-brand-600 mt-1">
-                                ${formatRupiah(item.price)}
-                            </p>
-                        ` : ''}
+                        ${displayPrice ? `<p class="font-display font-extrabold text-xs sm:text-sm text-brand-600 mt-1">${displayPrice}</p>` : ''}
                     </div>
 
-                    <!-- Right: Tombol Favorit & CTA Shopee -->
+                    <!-- Kanan: Tombol Wishlist & CTA Shopee -->
                     <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
                         <button onclick="toggleLike('${item.id}')" aria-label="Sukai produk"
-                                class="p-2 sm:p-2.5 rounded-xl bg-slate-50 hover:bg-rose-50 border border-slate-200/70 transition-transform active:scale-75">
+                                class="p-2.5 rounded-xl bg-slate-50 hover:bg-rose-50 border border-slate-200/70 transition-all active:scale-75">
                             <i data-lucide="heart" class="w-4 h-4 ${heartFill}"></i>
                         </button>
-
                         <button onclick="handleAffiliateClick('${item.id}')" 
-                                class="py-2.5 px-3 sm:px-4 bg-brand-600 hover:bg-brand-700 text-white font-semibold text-xs rounded-xl flex items-center justify-center gap-1.5 shadow-xs shadow-brand-500/20 transition-all active:scale-95">
+                                class="py-2.5 px-3 sm:px-4 bg-brand-600 hover:bg-brand-700 text-white font-semibold text-xs rounded-xl flex items-center gap-1.5 shadow-xs shadow-brand-500/20 transition-all active:scale-95">
                             <i data-lucide="shopping-bag" class="w-3.5 h-3.5 shrink-0"></i>
                             <span class="hidden sm:inline">Cek di Shopee</span>
                             <span class="sm:hidden">Beli</span>
@@ -881,7 +882,7 @@
             loader.classList.remove('hidden');
 
             setTimeout(() => {
-                visibleCount += 4;
+                visibleCount += 6;
                 renderStorefront();
                 loader.classList.add('hidden');
             }, 300);
@@ -999,13 +1000,13 @@
             listContainer.innerHTML = filtered.map(item => `
                 <div class="p-4 flex items-center justify-between gap-3 hover:bg-slate-50/80 transition-colors">
                     <div class="flex items-center gap-3 min-w-0">
-                        <div class="w-12 h-12 rounded-xl bg-slate-900 text-white font-display font-bold text-xs flex items-center justify-center shrink-0 shadow-2xs">
+                        <div class="w-11 h-11 rounded-xl bg-slate-900 text-white font-display font-bold text-xs flex items-center justify-center shrink-0">
                             #${item.code}
                         </div>
                         <div class="min-w-0">
                             <div class="flex flex-wrap items-center gap-1.5 mb-0.5">
                                 <span class="text-[10px] font-semibold text-brand-700 bg-brand-50 px-2 py-0.5 rounded-full">${item.category}</span>
-                                ${item.badge ? `<span class="text-[10px] font-bold text-amber-800 bg-amber-100 px-2 py-0.5 rounded-full">${item.badge}</span>` : ''}
+                                ${item.badge ? `<span class="text-[10px] font-semibold text-amber-800 bg-amber-100 px-2 py-0.5 rounded-full">${item.badge}</span>` : ''}
                                 <span class="text-[10px] text-slate-400">• ${item.clicks || 0} klik</span>
                             </div>
                             <h4 class="font-semibold text-xs sm:text-sm text-slate-800 truncate">${item.name}</h4>
