@@ -1,0 +1,1281 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>banding.in - Rekomendasi Shopee Pilihan</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Plus Jakarta Sans & Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Plus Jakarta Sans', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#eef2ff',
+                            100: '#e0e7ff',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                        }
+                    },
+                    animation: {
+                        'fade-in-up': 'fadeInUp 0.4s ease-out forwards',
+                    },
+                    keyframes: {
+                        fadeInUp: {
+                            '0%': { opacity: '0', transform: 'translateY(15px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-slate-50 text-slate-900 antialiased selection:bg-brand-500 selection:text-white pb-24 md:pb-12">
+
+    <!-- Toast Notification Container (Pengganti alert) -->
+    <div id="toast-container" class="fixed top-4 right-4 z-50 flex flex-col gap-2 max-w-xs w-full pointer-events-none"></div>
+
+    <!-- Top Navigation Bar -->
+    <header class="sticky top-0 z-40 bg-white/85 backdrop-blur-md border-b border-slate-200/80 transition-all">
+        <div class="max-w-3xl mx-auto px-4 h-16 flex items-center justify-between">
+            <!-- Brand / Profile -->
+            <div class="flex items-center gap-3 cursor-pointer" onclick="switchView('store')">
+                <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-brand-600 to-fuchsia-500 p-0.5 shadow-sm shrink-0">
+                    <img id="header-avatar" src="https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?auto=format&fit=crop&w=150&q=80" 
+                         alt="banding.in" 
+                         onerror="this.src='https://placehold.co/150x150/4f46e5/ffffff?text=B'"
+                         class="w-full h-full object-cover rounded-full border-2 border-white">
+                </div>
+                <div class="min-w-0">
+                    <h1 class="font-display font-extrabold text-base leading-tight text-slate-900 flex items-center gap-1">
+                        <span id="header-store-name">banding.in</span>
+                        <i data-lucide="badge-check" class="w-4 h-4 text-brand-500 fill-brand-500/20 shrink-0"></i>
+                    </h1>
+                    <p id="header-store-bio" class="text-xs text-slate-500 truncate">Bandingin dulu sebelum checkout Shopee!</p>
+                </div>
+            </div>
+
+            <!-- Action Buttons & Social Links -->
+            <div class="flex items-center gap-1.5">
+                <div id="header-socials" class="hidden sm:flex items-center gap-1 mr-1">
+                    <!-- Ikon media sosial dari pengaturan admin dirender di sini -->
+                </div>
+                <button onclick="shareStore()" class="p-2.5 text-slate-600 hover:text-brand-600 hover:bg-brand-50 rounded-full transition-colors" title="Bagikan Halaman">
+                    <i data-lucide="share-2" class="w-5 h-5"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- ========================================== -->
+    <!-- VIEW 1: STOREFRONT (HALAMAN PENGUNJUNG)    -->
+    <!-- ========================================== -->
+    <main id="view-store" class="max-w-3xl mx-auto px-4 pt-5 space-y-5">
+        
+        <!-- Highlight Banner / Promo Shopee -->
+        <div class="relative overflow-hidden rounded-2xl bg-gradient-to-r from-slate-900 via-brand-700 to-indigo-600 text-white p-5 shadow-lg shadow-brand-500/15">
+            <div class="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div class="max-w-md">
+                    <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-white/15 backdrop-blur-sm text-[11px] font-bold tracking-wider uppercase mb-2 text-indigo-100">
+                        <i data-lucide="shopping-bag" class="w-3 h-3"></i> Shopee Haul & Kurasi
+                    </span>
+                    <h2 class="font-display font-extrabold text-xl sm:text-2xl leading-snug mb-1">
+                        Cari barang spill di konten?
+                    </h2>
+                    <p class="text-xs sm:text-sm text-indigo-100/90">
+                        Ketik kode angka (cth: <strong>001</strong>) atau nama barang di bawah untuk langsung ke link Shopee termurah!
+                    </p>
+                </div>
+                <!-- Social Pills di Mobile -->
+                <div id="banner-socials" class="flex flex-wrap items-center gap-2">
+                    <!-- Tombol sosmed aktif dari admin -->
+                </div>
+            </div>
+            <!-- Decorative circles -->
+            <div class="absolute -right-8 -bottom-12 w-40 h-40 bg-white/10 rounded-full blur-2xl"></div>
+            <div class="absolute right-20 -top-10 w-24 h-24 bg-fuchsia-400/20 rounded-full blur-xl"></div>
+        </div>
+
+        <!-- Sticky Search & Category Filter -->
+        <div class="sticky top-16 z-30 bg-slate-50/95 backdrop-blur-sm pt-2 pb-3 space-y-3">
+            <!-- Search Input -->
+            <div class="relative">
+                <i data-lucide="search" class="w-5 h-5 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2"></i>
+                <input type="text" id="search-input" placeholder="Cari nomor (cth: 001) atau nama produk Shopee..." 
+                       class="w-full pl-11 pr-10 py-3 bg-white border border-slate-200 rounded-2xl text-sm shadow-xs focus:outline-none focus:ring-2 focus:ring-brand-500/25 focus:border-brand-500 transition-all">
+                <button id="clear-search" onclick="clearSearch()" class="hidden absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1">
+                    <i data-lucide="x" class="w-4 h-4"></i>
+                </button>
+            </div>
+
+            <!-- Horizontal Category Filter Pills -->
+            <div id="category-filters" class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1">
+                <!-- Kategori akan dirender otomatis oleh JavaScript -->
+            </div>
+        </div>
+
+        <!-- Initial Cloud Loading State -->
+        <div id="initial-loader" class="py-16 text-center">
+            <div class="inline-flex items-center gap-2.5 px-5 py-2.5 rounded-full bg-white border border-slate-200 text-xs font-semibold text-slate-600 shadow-xs">
+                <i data-lucide="loader-2" class="w-4 h-4 animate-spin text-brand-600"></i>
+                Menghubungkan ke katalog banding.in...
+            </div>
+        </div>
+
+        <!-- Product Grid (2 Kolom di HP, 3 Kolom di Tablet/Desktop) -->
+        <div id="product-grid" class="hidden grid-cols-2 sm:grid-cols-3 gap-3.5 sm:gap-4">
+            <!-- Kartu produk akan dirender otomatis oleh JavaScript -->
+        </div>
+
+        <!-- Empty State saat pencarian tidak ditemukan atau belum ada produk -->
+        <div id="empty-state" class="hidden text-center py-16 px-4 bg-white rounded-3xl border border-slate-100 shadow-xs">
+            <div class="w-16 h-16 bg-brand-50 rounded-full flex items-center justify-center mx-auto mb-4 text-brand-500">
+                <i data-lucide="package-search" class="w-8 h-8"></i>
+            </div>
+            <h3 id="empty-state-title" class="font-display font-bold text-slate-800 text-base mb-1">Belum ada produk tersedia</h3>
+            <p id="empty-state-desc" class="text-xs text-slate-500 mb-4 max-w-xs mx-auto">Katalog produk sedang disiapkan. Cek kembali sebentar lagi ya!</p>
+            <button id="empty-state-btn" onclick="resetFilters()" class="hidden px-4 py-2 bg-brand-600 text-white text-xs font-semibold rounded-full hover:bg-brand-700 transition-colors">
+                Tampilkan Semua Produk
+            </button>
+        </div>
+
+        <!-- Load More / Infinite Scroll Indicator -->
+        <div id="scroll-loader" class="py-6 text-center hidden">
+            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-slate-200 text-xs font-medium text-slate-600 shadow-xs">
+                <i data-lucide="loader-2" class="w-4 h-4 animate-spin text-brand-500"></i>
+                Memuat produk lainnya...
+            </div>
+        </div>
+    </main>
+
+    <!-- ========================================== -->
+    <!-- VIEW 2: ADMIN PANEL (KELOLA PRODUK & TOKO) -->
+    <!-- ========================================== -->
+    <section id="view-admin" class="hidden max-w-3xl mx-auto px-4 pt-6 space-y-6">
+        
+        <!-- Admin Header & Quick Actions -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-5 rounded-3xl border border-slate-200/80 shadow-xs">
+            <div>
+                <div class="flex items-center gap-2">
+                    <span class="px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-700 text-[11px] font-bold flex items-center gap-1">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping"></span> CLOUD SYNC AKTIF
+                    </span>
+                    <h2 class="font-display font-bold text-lg text-slate-900">Dashboard banding.in</h2>
+                </div>
+                <p class="text-xs text-slate-500 mt-1">Semua perubahan tersimpan otomatis ke cloud & langsung tampil di perangkat pengunjung.</p>
+            </div>
+            <div class="flex items-center gap-2">
+                <button onclick="openSettingsModal()" class="flex items-center gap-1.5 px-3.5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-semibold rounded-xl transition-all active:scale-95">
+                    <i data-lucide="settings" class="w-4 h-4"></i>
+                    <span>Pengaturan & Sosmed</span>
+                </button>
+                <button onclick="openProductModal()" class="flex items-center gap-1.5 px-4 py-2.5 bg-brand-600 hover:bg-brand-700 text-white text-xs font-semibold rounded-xl shadow-sm shadow-brand-500/30 transition-all active:scale-95">
+                    <i data-lucide="plus" class="w-4 h-4"></i>
+                    <span>Tambah Produk</span>
+                </button>
+                <button onclick="logoutAdmin()" class="p-2.5 text-slate-500 hover:text-rose-600 hover:bg-rose-50 rounded-xl border border-slate-200 transition-colors" title="Keluar Mode Admin">
+                    <i data-lucide="log-out" class="w-4 h-4"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Analytics Summary Cards -->
+        <div class="grid grid-cols-3 gap-3">
+            <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-xs">
+                <p class="text-[11px] font-medium text-slate-500">Total Produk</p>
+                <p id="stat-total-products" class="font-display font-bold text-xl sm:text-2xl text-slate-900 mt-1">0</p>
+            </div>
+            <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-xs">
+                <p class="text-[11px] font-medium text-slate-500">Total Klik Shopee</p>
+                <p id="stat-total-clicks" class="font-display font-bold text-xl sm:text-2xl text-brand-600 mt-1">0</p>
+            </div>
+            <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-xs">
+                <p class="text-[11px] font-medium text-slate-500">Kategori</p>
+                <p id="stat-total-categories" class="font-display font-bold text-xl sm:text-2xl text-slate-900 mt-1">0</p>
+            </div>
+        </div>
+
+        <!-- Admin Tools (Backup JSON) -->
+        <div class="flex flex-wrap items-center justify-between gap-2 bg-indigo-50/70 border border-indigo-200/60 p-3 rounded-2xl text-xs">
+            <span class="text-slate-700 font-medium px-2 flex items-center gap-1.5">
+                <i data-lucide="database" class="w-4 h-4 text-brand-600"></i>
+                Cadangkan Data Produk:
+            </span>
+            <div class="flex items-center gap-2">
+                <button onclick="exportData()" class="px-3 py-1.5 bg-white hover:bg-slate-50 text-slate-700 font-medium rounded-lg border border-slate-200 shadow-2xs flex items-center gap-1.5">
+                    <i data-lucide="download" class="w-3.5 h-3.5"></i> Backup JSON
+                </button>
+            </div>
+        </div>
+
+        <!-- Admin Product List Table / Cards -->
+        <div class="bg-white rounded-3xl border border-slate-200/80 shadow-xs overflow-hidden">
+            <div class="p-4 border-b border-slate-100 flex items-center justify-between gap-2">
+                <h3 class="font-display font-bold text-sm text-slate-800">Daftar Barang Affiliate</h3>
+                <input type="text" id="admin-search" placeholder="Cari kode / nama..." class="px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-brand-500 w-40 sm:w-56">
+            </div>
+            <div id="admin-product-list" class="divide-y divide-slate-100">
+                <!-- Daftar produk admin dirender di sini -->
+            </div>
+        </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- MODAL: LOGIN ADMIN                         -->
+    <!-- ========================================== -->
+    <div id="modal-login" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs">
+        <div class="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl animate-fade-in-up">
+            <div class="flex items-center justify-between mb-4">
+                <div class="w-10 h-10 rounded-2xl bg-brand-50 text-brand-600 flex items-center justify-center">
+                    <i data-lucide="lock" class="w-5 h-5"></i>
+                </div>
+                <button onclick="closeLoginModal()" class="p-2 text-slate-400 hover:text-slate-600 rounded-full hover:bg-slate-100">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            <h3 class="font-display font-bold text-lg text-slate-900">Admin banding.in</h3>
+            <p class="text-xs text-slate-500 mt-1 mb-4">Masukkan PIN akses untuk mengelola link Shopee & media sosial. (PIN Default: <strong class="text-slate-800" id="pin-hint">1234</strong>)</p>
+            
+            <form onsubmit="handleAdminLogin(event)" class="space-y-4">
+                <div>
+                    <input type="password" id="admin-pin-input" placeholder="Masukkan PIN" required
+                           class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl text-center font-bold tracking-widest text-lg focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500">
+                </div>
+                <button type="submit" class="w-full py-3 bg-brand-600 hover:bg-brand-700 text-white font-semibold text-sm rounded-2xl transition-all active:scale-95">
+                    Buka Dashboard Admin
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- MODAL: PENGATURAN TOKO & MEDIA SOSIAL      -->
+    <!-- ========================================== -->
+    <div id="modal-settings" class="fixed inset-0 z-50 hidden items-end sm:items-center justify-center sm:p-4 bg-slate-900/60 backdrop-blur-xs">
+        <div class="bg-white rounded-t-3xl sm:rounded-3xl max-w-lg w-full max-h-[90vh] overflow-y-auto p-6 shadow-2xl animate-fade-in-up">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-100 mb-4">
+                <div>
+                    <h3 class="font-display font-bold text-lg text-slate-900">Pengaturan Toko & Sosmed</h3>
+                    <p class="text-[11px] text-slate-500">Atur profil banding.in dan tautan media sosial Anda</p>
+                </div>
+                <button onclick="closeSettingsModal()" class="p-2 text-slate-400 hover:text-slate-600 rounded-full hover:bg-slate-100">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <form onsubmit="saveStoreSettings(event)" class="space-y-4">
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Nama Toko</label>
+                        <input type="text" id="set-store-name" required value="banding.in"
+                               class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold focus:outline-none focus:border-brand-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">PIN Admin Baru</label>
+                        <input type="text" id="set-admin-pin" required maxlength="8" placeholder="1234"
+                               class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-mono focus:outline-none focus:border-brand-500">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Bio / Slogan Singkat</label>
+                    <input type="text" id="set-store-bio" placeholder="Bandingin dulu sebelum checkout Shopee!"
+                           class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-brand-500">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">URL Foto Profil / Logo Toko</label>
+                    <input type="url" id="set-store-avatar" placeholder="https://..."
+                           class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-brand-500">
+                </div>
+
+                <div class="pt-2 border-t border-slate-100 space-y-3">
+                    <p class="text-xs font-bold text-slate-800">Tautan Media Sosial (Kosongkan jika tidak dipakai)</p>
+                    
+                    <div>
+                        <label class="block text-[11px] font-semibold text-slate-600 mb-1">Link TikTok</label>
+                        <input type="url" id="set-tiktok" placeholder="https://tiktok.com/@username"
+                               class="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-brand-500">
+                    </div>
+
+                    <div>
+                        <label class="block text-[11px] font-semibold text-slate-600 mb-1">Link Instagram</label>
+                        <input type="url" id="set-instagram" placeholder="https://instagram.com/username"
+                               class="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-brand-500">
+                    </div>
+
+                    <div>
+                        <label class="block text-[11px] font-semibold text-slate-600 mb-1">Link YouTube / Threads / WhatsApp</label>
+                        <input type="url" id="set-youtube" placeholder="https://youtube.com/@channel"
+                               class="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-brand-500">
+                    </div>
+                </div>
+
+                <div class="pt-3 flex items-center gap-3">
+                    <button type="button" onclick="closeSettingsModal()" class="flex-1 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-sm rounded-2xl transition-colors">
+                        Batal
+                    </button>
+                    <button type="submit" class="flex-1 py-3 bg-brand-600 hover:bg-brand-700 text-white font-semibold text-sm rounded-2xl shadow-lg shadow-brand-500/25 transition-all active:scale-95">
+                        Simpan Pengaturan
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- MODAL: TAMBAH / EDIT PRODUK SHOPEE         -->
+    <!-- ========================================== -->
+    <div id="modal-product" class="fixed inset-0 z-50 hidden items-end sm:items-center justify-center sm:p-4 bg-slate-900/60 backdrop-blur-xs">
+        <div class="bg-white rounded-t-3xl sm:rounded-3xl max-w-lg w-full max-h-[90vh] overflow-y-auto p-6 shadow-2xl animate-fade-in-up">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-100 mb-4">
+                <h3 id="modal-product-title" class="font-display font-bold text-lg text-slate-900">Tambah Produk Shopee</h3>
+                <button onclick="closeProductModal()" class="p-2 text-slate-400 hover:text-slate-600 rounded-full hover:bg-slate-100">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <form id="product-form" onsubmit="saveProduct(event)" class="space-y-4">
+                <input type="hidden" id="prod-id">
+                
+                <!-- Link Affiliate Shopee + Auto Fetch Button -->
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1.5">Link Affiliate Shopee *</label>
+                    <div class="flex gap-2">
+                        <input type="url" id="prod-link" required placeholder="https://s.shopee.co.id/... atau https://shope.ee/..." 
+                               class="flex-1 px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-brand-500">
+                        <button type="button" id="btn-fetch-meta" onclick="autoFetchFromLink()" 
+                                class="px-3.5 py-2.5 bg-brand-50 hover:bg-brand-100 text-brand-700 font-semibold text-xs rounded-xl border border-brand-200 flex items-center gap-1.5 shrink-0 transition-colors"
+                                title="Ambil judul & gambar otomatis dari link">
+                            <i data-lucide="wand-2" class="w-4 h-4"></i>
+                            <span>Ambil Info</span>
+                        </button>
+                    </div>
+                    <p class="text-[11px] text-slate-400 mt-1">Klik <strong>Ambil Info</strong> untuk menarik foto & nama produk otomatis dari link Shopee.</p>
+                </div>
+
+                <!-- Preview & Image URL -->
+                <div class="flex items-start gap-3 p-3 bg-slate-50 rounded-2xl border border-slate-200/80">
+                    <img id="prod-img-preview" src="https://placehold.co/200x200/eef2ff/4f46e5?text=Shopee" 
+                         onerror="this.src='https://placehold.co/200x200/eef2ff/4f46e5?text=No+Image'"
+                         class="w-20 h-20 rounded-xl object-cover bg-white border border-slate-200 shrink-0">
+                    <div class="flex-1 space-y-1.5">
+                        <label class="block text-xs font-semibold text-slate-700">URL Gambar Produk *</label>
+                        <input type="url" id="prod-image" required placeholder="https://down-id.img.susercontent.com/..." oninput="updateImagePreview(this.value)"
+                               class="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-brand-500">
+                        <p class="text-[10px] text-slate-500">Terisi otomatis saat klik "Ambil Info", atau salin link gambar dari halaman Shopee.</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-3 gap-3">
+                    <!-- Kode / Nomor Urut -->
+                    <div class="col-span-1">
+                        <label class="block text-xs font-semibold text-slate-700 mb-1.5">Nomor / Kode *</label>
+                        <input type="text" id="prod-code" required placeholder="001" 
+                               class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold text-brand-600 focus:outline-none focus:border-brand-500">
+                    </div>
+                    <!-- Nama Produk -->
+                    <div class="col-span-2">
+                        <label class="block text-xs font-semibold text-slate-700 mb-1.5">Nama Produk *</label>
+                        <input type="text" id="prod-name" required placeholder="Contoh: Lampu Tidur Proyektor" 
+                               class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-brand-500">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <!-- Kategori -->
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1.5">Kategori *</label>
+                        <input type="text" id="prod-category" list="category-suggestions" required placeholder="Pilih atau ketik..." 
+                               class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-brand-500">
+                        <datalist id="category-suggestions">
+                            <option value="Fashion & Tas">
+                            <option value="Gadget & Aksesoris">
+                            <option value="Dekorasi Rumah">
+                            <option value="Skincare & Beauty">
+                            <option value="Dapur & Unik">
+                            <option value="Otomotif">
+                        </datalist>
+                    </div>
+                    <!-- Label Toko Shopee -->
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1.5">Tipe Toko Shopee</label>
+                        <select id="prod-platform" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-brand-500">
+                            <option value="Shopee Mall">Shopee Mall</option>
+                            <option value="Shopee Star+">Shopee Star+</option>
+                            <option value="Shopee Choice">Shopee Choice</option>
+                            <option value="Shopee">Shopee Reguler</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <!-- Harga Display -->
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1.5">Harga / Info Promo</label>
+                        <input type="text" id="prod-price" placeholder="Rp 45.000 (Diskon 50%)" 
+                               class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-brand-500">
+                    </div>
+                    <!-- Badge Label -->
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1.5">Label Highlight</label>
+                        <select id="prod-badge" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-brand-500">
+                            <option value="">Tanpa Label</option>
+                            <option value="🔥 Racun Viral">🔥 Racun Viral</option>
+                            <option value="⭐ Termurah">⭐ Termurah</option>
+                            <option value="💸 Flash Sale">💸 Flash Sale</option>
+                            <option value="✨ Wajib Punya">✨ Wajib Punya</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="pt-3 flex items-center gap-3">
+                    <button type="button" onclick="closeProductModal()" class="flex-1 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-sm rounded-2xl transition-colors">
+                        Batal
+                    </button>
+                    <button type="submit" id="btn-save-product" class="flex-1 py-3 bg-brand-600 hover:bg-brand-700 text-white font-semibold text-sm rounded-2xl shadow-lg shadow-brand-500/25 transition-all active:scale-95">
+                        Simpan Produk
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- MODAL: KONFIRMASI HAPUS                    -->
+    <!-- ========================================== -->
+    <div id="modal-delete" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs">
+        <div class="bg-white rounded-3xl max-w-xs w-full p-6 shadow-2xl text-center animate-fade-in-up">
+            <div class="w-12 h-12 rounded-full bg-rose-100 text-rose-600 flex items-center justify-center mx-auto mb-3">
+                <i data-lucide="trash-2" class="w-6 h-6"></i>
+            </div>
+            <h3 class="font-display font-bold text-base text-slate-900">Hapus Produk Ini?</h3>
+            <p id="delete-product-name" class="text-xs text-slate-500 mt-1 mb-5">Produk akan dihapus dari database.</p>
+            <div class="flex gap-2">
+                <button onclick="closeDeleteModal()" class="flex-1 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-xl">
+                    Batal
+                </button>
+                <button id="confirm-delete-btn" class="flex-1 py-2.5 bg-rose-600 hover:bg-rose-700 text-white text-xs font-semibold rounded-xl">
+                    Ya, Hapus
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating Back-to-Top Button -->
+    <button id="back-to-top" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" 
+            class="fixed bottom-6 right-5 z-30 p-3 bg-brand-600/95 text-white rounded-full shadow-lg backdrop-blur-sm opacity-0 pointer-events-none transition-all duration-300 hover:bg-brand-700 active:scale-90">
+        <i data-lucide="arrow-up" class="w-5 h-5"></i>
+    </button>
+
+    <style>
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+
+    <!-- ========================================== -->
+    <!-- FIREBASE CLOUD & JAVASCRIPT LOGIC          -->
+    <!-- ========================================== -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc, addDoc, updateDoc, deleteDoc, onSnapshot, collection } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // --- 1. KONFIGURASI FIREBASE PROJECT: banding-in-ff162 ---
+        const defaultFirebaseConfig = {
+            apiKey: "AIzaSyBWEXI4AdjSzeo9ytCE4tzPC-8S3-sv6es",
+            authDomain: "banding-in-ff162.firebaseapp.com",
+            projectId: "banding-in-ff162",
+            storageBucket: "banding-in-ff162.firebasestorage.app",
+            messagingSenderId: "526755286760",
+            appId: "1:526755286760:web:91b0e3bb9b86a47ba7835d",
+            measurementId: "G-04D2KVZLG9"
+        };
+
+        const firebaseConfig = typeof __firebase_config !== 'undefined' 
+            ? JSON.parse(__firebase_config) 
+            : defaultFirebaseConfig;
+        
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'banding-in-shopee';
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // --- 2. STATE MANAGEMENT ---
+        let currentUser = null;
+        let products = [];
+        let likedIds = new Set(); // Disimpan di memori sesi pengunjung
+        let storeSettings = {
+            storeName: 'banding.in',
+            storeBio: 'Bandingin dulu sebelum checkout Shopee!',
+            storeAvatar: 'https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?auto=format&fit=crop&w=150&q=80',
+            adminPin: '1234',
+            tiktok: '',
+            instagram: '',
+            youtube: ''
+        };
+
+        let selectedCategory = 'Semua';
+        let searchQuery = '';
+        let visibleCount = 6;
+        let isAdminLoggedIn = false;
+        let productToDeleteId = null;
+
+        // --- 3. INISIALISASI FIREBASE AUTH & FIRESTORE LISTENERS ---
+        async function initApp() {
+            setupEventListeners();
+            lucide.createIcons();
+
+            // Cek apakah URL dibuka dengan parameter ?admin atau #admin
+            checkAdminUrlTrigger();
+            window.addEventListener('hashchange', checkAdminUrlTrigger);
+
+            try {
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await signInAnonymously(auth);
+                }
+            } catch (err) {
+                console.error("Auth error:", err);
+                showToast("Mode offline aktif (Pastikan Anonymous Auth diaktifkan di Firebase)", "info");
+            }
+
+            onAuthStateChanged(auth, (user) => {
+                currentUser = user;
+                if (user) {
+                    subscribeToProducts();
+                    subscribeToStoreSettings();
+                }
+            });
+        }
+
+        // Deteksi URL Rahasia menuju Admin (?admin atau #admin)
+        function checkAdminUrlTrigger() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const isAdminRoute = urlParams.has('admin') || window.location.hash === '#admin';
+            if (isAdminRoute && !isAdminLoggedIn) {
+                openLoginModal();
+            }
+        }
+
+        function openLoginModal() {
+            document.getElementById('modal-login').classList.remove('hidden');
+            document.getElementById('modal-login').classList.add('flex');
+            setTimeout(() => document.getElementById('admin-pin-input').focus(), 100);
+        }
+
+        // Real-time Listener untuk Daftar Produk
+        function subscribeToProducts() {
+            if (!currentUser) return;
+            const productsCol = collection(db, 'artifacts', appId, 'public', 'data', 'products');
+
+            onSnapshot(productsCol, (snapshot) => {
+                const fetched = [];
+                snapshot.forEach((docSnap) => {
+                    fetched.push({ id: docSnap.id, ...docSnap.data() });
+                });
+
+                fetched.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+                products = fetched;
+
+                document.getElementById('initial-loader').classList.add('hidden');
+                document.getElementById('product-grid').classList.remove('hidden');
+                document.getElementById('product-grid').classList.add('grid');
+
+                renderCategories();
+                renderStorefront();
+                if (isAdminLoggedIn) {
+                    updateAdminStats();
+                    renderAdminList(document.getElementById('admin-search').value.trim().toLowerCase());
+                }
+            }, (error) => {
+                console.error("Firestore products error:", error);
+                document.getElementById('initial-loader').classList.add('hidden');
+                showToast("Gagal memuat produk. Cek Firestore Rules Anda.", "error");
+            });
+        }
+
+        // Real-time Listener untuk Profil Toko & Media Sosial
+        function subscribeToStoreSettings() {
+            if (!currentUser) return;
+            const settingsDoc = doc(db, 'artifacts', appId, 'public', 'data', 'settings', 'store_profile');
+
+            onSnapshot(settingsDoc, (docSnap) => {
+                if (docSnap.exists()) {
+                    storeSettings = { ...storeSettings, ...docSnap.data() };
+                }
+                applyStoreSettingsToUI();
+            }, (error) => {
+                console.error("Firestore settings error:", error);
+            });
+        }
+
+        function applyStoreSettingsToUI() {
+            document.title = `${storeSettings.storeName} - Rekomendasi Shopee Pilihan`;
+            document.getElementById('header-store-name').textContent = storeSettings.storeName;
+            document.getElementById('header-store-bio').textContent = storeSettings.storeBio;
+            document.getElementById('header-avatar').src = storeSettings.storeAvatar;
+            document.getElementById('pin-hint').textContent = storeSettings.adminPin === '1234' ? '1234' : '****';
+
+            // Render Ikon Media Sosial di Header & Banner
+            const socials = [];
+            if (storeSettings.tiktok) socials.push({ name: 'TikTok', url: storeSettings.tiktok, icon: 'music-2' });
+            if (storeSettings.instagram) socials.push({ name: 'Instagram', url: storeSettings.instagram, icon: 'instagram' });
+            if (storeSettings.youtube) socials.push({ name: 'YouTube', url: storeSettings.youtube, icon: 'youtube' });
+
+            const headerSocialContainer = document.getElementById('header-socials');
+            const bannerSocialContainer = document.getElementById('banner-socials');
+
+            headerSocialContainer.innerHTML = socials.map(s => `
+                <a href="${s.url}" target="_blank" rel="noopener noreferrer" title="${s.name}"
+                   class="p-2 text-slate-600 hover:text-brand-600 hover:bg-brand-50 rounded-full transition-colors">
+                    <i data-lucide="${s.icon}" class="w-4 h-4"></i>
+                </a>
+            `).join('');
+
+            bannerSocialContainer.innerHTML = socials.map(s => `
+                <a href="${s.url}" target="_blank" rel="noopener noreferrer"
+                   class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white text-xs font-semibold transition-all">
+                    <i data-lucide="${s.icon}" class="w-3.5 h-3.5"></i>
+                    <span>${s.name}</span>
+                </a>
+            `).join('');
+
+            lucide.createIcons();
+        }
+
+        // --- 5. EVENT LISTENERS (SEARCH & INFINITE SCROLL) ---
+        function setupEventListeners() {
+            const searchInput = document.getElementById('search-input');
+            const clearBtn = document.getElementById('clear-search');
+            
+            searchInput.addEventListener('input', (e) => {
+                searchQuery = e.target.value.trim().toLowerCase();
+                clearBtn.classList.toggle('hidden', searchQuery === '');
+                visibleCount = 6;
+                renderStorefront();
+            });
+
+            document.getElementById('admin-search').addEventListener('input', (e) => {
+                renderAdminList(e.target.value.trim().toLowerCase());
+            });
+
+            window.addEventListener('scroll', () => {
+                const backToTopBtn = document.getElementById('back-to-top');
+                if (window.scrollY > 300) {
+                    backToTopBtn.classList.remove('opacity-0', 'pointer-events-none');
+                } else {
+                    backToTopBtn.classList.add('opacity-0', 'pointer-events-none');
+                }
+
+                if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 150) {
+                    loadMoreProducts();
+                }
+            });
+        }
+
+        // --- 6. RENDER STOREFRONT (HALAMAN PENGUNJUNG) ---
+        function renderCategories() {
+            const container = document.getElementById('category-filters');
+            const categories = ['Semua', '❤️ Favorit', ...new Set(products.map(p => p.category))];
+
+            container.innerHTML = categories.map(cat => {
+                const isActive = selectedCategory === cat;
+                const activeClasses = isActive 
+                    ? 'bg-brand-600 text-white shadow-sm shadow-brand-500/25' 
+                    : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-100';
+                
+                return `
+                    <button onclick="selectCategory('${cat}')" 
+                            class="px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition-all active:scale-95 ${activeClasses}">
+                        ${cat}
+                    </button>
+                `;
+            }).join('');
+        }
+
+        function selectCategory(cat) {
+            selectedCategory = cat;
+            visibleCount = 6;
+            renderCategories();
+            renderStorefront();
+        }
+
+        function clearSearch() {
+            const input = document.getElementById('search-input');
+            input.value = '';
+            searchQuery = '';
+            document.getElementById('clear-search').classList.add('hidden');
+            renderStorefront();
+        }
+
+        function resetFilters() {
+            selectedCategory = 'Semua';
+            clearSearch();
+            renderCategories();
+            renderStorefront();
+        }
+
+        function getFilteredProducts() {
+            return products.filter(p => {
+                if (selectedCategory === '❤️ Favorit') {
+                    if (!likedIds.has(p.id)) return false;
+                } else if (selectedCategory !== 'Semua') {
+                    if (p.category !== selectedCategory) return false;
+                }
+
+                if (searchQuery) {
+                    const matchName = (p.name || '').toLowerCase().includes(searchQuery);
+                    const matchCode = (p.code || '').toLowerCase().includes(searchQuery);
+                    const matchCat = (p.category || '').toLowerCase().includes(searchQuery);
+                    return matchName || matchCode || matchCat;
+                }
+                return true;
+            });
+        }
+
+        function renderStorefront() {
+            const grid = document.getElementById('product-grid');
+            const emptyState = document.getElementById('empty-state');
+            const emptyTitle = document.getElementById('empty-state-title');
+            const emptyDesc = document.getElementById('empty-state-desc');
+            const emptyBtn = document.getElementById('empty-state-btn');
+            const filtered = getFilteredProducts();
+
+            if (filtered.length === 0) {
+                grid.innerHTML = '';
+                emptyState.classList.remove('hidden');
+                if (products.length === 0) {
+                    emptyTitle.textContent = 'Katalog masih kosong';
+                    emptyDesc.textContent = 'Belum ada produk yang ditambahkan ke etalase.';
+                    emptyBtn.classList.add('hidden');
+                } else {
+                    emptyTitle.textContent = 'Produk tidak ditemukan';
+                    emptyDesc.textContent = 'Coba gunakan kata kunci lain atau reset filter kategori yang dipilih.';
+                    emptyBtn.classList.remove('hidden');
+                }
+                return;
+            }
+
+            emptyState.classList.add('hidden');
+            const itemsToShow = filtered.slice(0, visibleCount);
+
+            grid.innerHTML = itemsToShow.map((item, idx) => {
+                const shopeeBadge = getShopeeBadgeStyle(item.platform);
+                const isLiked = likedIds.has(item.id);
+                const heartFill = isLiked ? 'fill-rose-500 text-rose-500' : 'text-slate-600';
+
+                return `
+                <article class="group bg-white rounded-2xl border border-slate-200/80 overflow-hidden shadow-2xs hover:shadow-md hover:border-brand-200 transition-all duration-300 flex flex-col justify-between animate-fade-in-up" style="animation-delay: ${idx * 35}ms">
+                    <div>
+                        <!-- Image Container -->
+                        <div class="relative aspect-square bg-slate-100 overflow-hidden">
+                            <img src="${item.image}" alt="${item.name}" loading="lazy"
+                                 onerror="this.src='https://placehold.co/400x400/eef2ff/4f46e5?text=Produk+${item.code}'"
+                                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                            
+                            <!-- Nomor Urut Produk -->
+                            <span class="absolute top-2.5 left-2.5 px-2.5 py-1 rounded-lg bg-slate-900/85 backdrop-blur-xs text-white font-display font-bold text-xs shadow-xs">
+                                #${item.code}
+                            </span>
+
+                            <!-- Tombol Wishlist / Like -->
+                            <button onclick="toggleLike('${item.id}')" aria-label="Sukai produk"
+                                    class="absolute top-2.5 right-2.5 p-2 rounded-full bg-white/90 backdrop-blur-xs shadow-xs hover:bg-white transition-transform active:scale-75">
+                                <i data-lucide="heart" class="w-4 h-4 ${heartFill}"></i>
+                            </button>
+
+                            <!-- Highlight Badge -->
+                            ${item.badge ? `
+                                <span class="absolute bottom-2 left-2 px-2 py-0.5 rounded-md bg-amber-400 text-slate-900 font-bold text-[10px] shadow-xs">
+                                    ${item.badge}
+                                </span>
+                            ` : ''}
+                        </div>
+
+                        <!-- Content -->
+                        <div class="p-3">
+                            <div class="flex items-center justify-between gap-1 mb-1">
+                                <span class="text-[10px] font-bold px-2 py-0.5 rounded-md ${shopeeBadge}">
+                                    ${item.platform || 'Shopee'}
+                                </span>
+                                <span class="text-[10px] text-slate-400 truncate">${item.category}</span>
+                            </div>
+                            <h3 class="font-medium text-xs sm:text-sm text-slate-800 line-clamp-2 leading-snug mb-1.5" title="${item.name}">
+                                ${item.name}
+                            </h3>
+                            ${item.price ? `<p class="font-display font-extrabold text-sm text-brand-600">${item.price}</p>` : ''}
+                        </div>
+                    </div>
+
+                    <!-- CTA Button -->
+                    <div class="px-3 pb-3 pt-1">
+                        <button onclick="handleAffiliateClick('${item.id}')" 
+                                class="w-full py-2.5 px-3 bg-brand-600 hover:bg-brand-700 text-white font-semibold text-xs rounded-xl flex items-center justify-center gap-1.5 shadow-xs shadow-brand-500/20 transition-all active:scale-95">
+                            <i data-lucide="shopping-bag" class="w-3.5 h-3.5"></i>
+                            <span>Cek di Shopee</span>
+                        </button>
+                    </div>
+                </article>
+                `;
+            }).join('');
+
+            lucide.createIcons();
+        }
+
+        function loadMoreProducts() {
+            const filtered = getFilteredProducts();
+            if (visibleCount >= filtered.length) return;
+
+            const loader = document.getElementById('scroll-loader');
+            loader.classList.remove('hidden');
+
+            setTimeout(() => {
+                visibleCount += 4;
+                renderStorefront();
+                loader.classList.add('hidden');
+            }, 300);
+        }
+
+        function getShopeeBadgeStyle(platform) {
+            switch (platform) {
+                case 'Shopee Mall': return 'bg-rose-600 text-white';
+                case 'Shopee Star+': return 'bg-orange-100 text-orange-700 border border-orange-200';
+                case 'Shopee Choice': return 'bg-amber-100 text-amber-800 border border-amber-200';
+                default: return 'bg-indigo-50 text-brand-700 border border-indigo-200/70';
+            }
+        }
+
+        // --- 7. INTERAKSI PENGGUNA (KLIK LINK & FAVORIT) ---
+        async function handleAffiliateClick(id) {
+            const item = products.find(p => p.id === id);
+            if (!item) return;
+
+            showToast(`Membuka Shopee...`, 'success');
+            window.open(item.link, '_blank', 'noopener,noreferrer');
+
+            if (currentUser) {
+                try {
+                    const prodRef = doc(db, 'artifacts', appId, 'public', 'data', 'products', id);
+                    await updateDoc(prodRef, {
+                        clicks: (item.clicks || 0) + 1
+                    });
+                } catch (e) {
+                    console.error("Gagal update klik:", e);
+                }
+            }
+        }
+
+        function toggleLike(id) {
+            if (likedIds.has(id)) {
+                likedIds.delete(id);
+            } else {
+                likedIds.add(id);
+                showToast('Disimpan ke Favorit ❤️');
+            }
+            renderStorefront();
+        }
+
+        function shareStore() {
+            const url = window.location.href;
+            const tempInput = document.createElement('input');
+            tempInput.value = url;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+            showToast(`Link ${storeSettings.storeName} disalin! 📋`, 'success');
+        }
+
+        // --- 8. SISTEM ADMIN & PENGATURAN TOKO ---
+        function closeLoginModal() {
+            document.getElementById('modal-login').classList.add('hidden');
+            document.getElementById('modal-login').classList.remove('flex');
+            document.getElementById('admin-pin-input').value = '';
+        }
+
+        function handleAdminLogin(e) {
+            e.preventDefault();
+            const pin = document.getElementById('admin-pin-input').value;
+            if (pin === storeSettings.adminPin) {
+                isAdminLoggedIn = true;
+                closeLoginModal();
+                switchView('admin');
+                showToast(`Selamat datang di Admin ${storeSettings.storeName}!`, 'success');
+            } else {
+                showToast('PIN salah! Silakan coba lagi.', 'error');
+            }
+        }
+
+        function logoutAdmin() {
+            isAdminLoggedIn = false;
+            if (window.history && window.history.replaceState) {
+                window.history.replaceState({}, document.title, window.location.pathname);
+            }
+            switchView('store');
+            showToast('Keluar dari mode Admin');
+        }
+
+        function switchView(view) {
+            const storeView = document.getElementById('view-store');
+            const adminView = document.getElementById('view-admin');
+
+            if (view === 'admin') {
+                storeView.classList.add('hidden');
+                adminView.classList.remove('hidden');
+                updateAdminStats();
+                renderAdminList();
+            } else {
+                adminView.classList.add('hidden');
+                storeView.classList.remove('hidden');
+                renderCategories();
+                renderStorefront();
+            }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function updateAdminStats() {
+            document.getElementById('stat-total-products').textContent = products.length;
+            const totalClicks = products.reduce((sum, item) => sum + (item.clicks || 0), 0);
+            document.getElementById('stat-total-clicks').textContent = totalClicks;
+            const uniqueCats = new Set(products.map(p => p.category)).size;
+            document.getElementById('stat-total-categories').textContent = uniqueCats;
+        }
+
+        function renderAdminList(filterText = '') {
+            const listContainer = document.getElementById('admin-product-list');
+            const filtered = products.filter(p => 
+                (p.name || '').toLowerCase().includes(filterText) || 
+                (p.code || '').toLowerCase().includes(filterText) ||
+                (p.category || '').toLowerCase().includes(filterText)
+            );
+
+            if (filtered.length === 0) {
+                listContainer.innerHTML = `<div class="p-8 text-center text-xs text-slate-400">Belum ada produk atau tidak ditemukan.</div>`;
+                return;
+            }
+
+            listContainer.innerHTML = filtered.map(item => `
+                <div class="p-4 flex items-center justify-between gap-3 hover:bg-slate-50/80 transition-colors">
+                    <div class="flex items-center gap-3 min-w-0">
+                        <img src="${item.image}" alt="${item.name}" 
+                             onerror="this.src='https://placehold.co/100x100/eef2ff/4f46e5?text=${item.code}'"
+                             class="w-14 h-14 rounded-xl object-cover border border-slate-200 shrink-0">
+                        <div class="min-w-0">
+                            <div class="flex items-center gap-1.5 mb-0.5">
+                                <span class="px-1.5 py-0.5 rounded bg-slate-900 text-white font-bold text-[10px]">#${item.code}</span>
+                                <span class="text-[10px] font-semibold text-brand-700 bg-brand-50 px-2 py-0.5 rounded-full">${item.platform || 'Shopee'}</span>
+                                <span class="text-[10px] text-slate-400">• ${item.clicks || 0} klik</span>
+                            </div>
+                            <h4 class="font-semibold text-xs sm:text-sm text-slate-800 truncate">${item.name}</h4>
+                            <p class="text-[11px] text-slate-500 truncate">${item.category} ${item.price ? `• ${item.price}` : ''}</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-1.5 shrink-0">
+                        <button onclick="openProductModal('${item.id}')" class="p-2 text-slate-600 hover:text-brand-600 hover:bg-brand-50 rounded-xl transition-colors" title="Edit">
+                            <i data-lucide="pencil" class="w-4 h-4"></i>
+                        </button>
+                        <button onclick="askDeleteProduct('${item.id}')" class="p-2 text-slate-600 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-colors" title="Hapus">
+                            <i data-lucide="trash-2" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+
+            lucide.createIcons();
+        }
+
+        // --- 9. PENGATURAN PROFIL TOKO & MEDIA SOSIAL ---
+        function openSettingsModal() {
+            document.getElementById('set-store-name').value = storeSettings.storeName;
+            document.getElementById('set-admin-pin').value = storeSettings.adminPin;
+            document.getElementById('set-store-bio').value = storeSettings.storeBio;
+            document.getElementById('set-store-avatar').value = storeSettings.storeAvatar;
+            document.getElementById('set-tiktok').value = storeSettings.tiktok || '';
+            document.getElementById('set-instagram').value = storeSettings.instagram || '';
+            document.getElementById('set-youtube').value = storeSettings.youtube || '';
+
+            const modal = document.getElementById('modal-settings');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeSettingsModal() {
+            const modal = document.getElementById('modal-settings');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        async function saveStoreSettings(e) {
+            e.preventDefault();
+            if (!currentUser) return;
+
+            const newSettings = {
+                storeName: document.getElementById('set-store-name').value.trim() || 'banding.in',
+                adminPin: document.getElementById('set-admin-pin').value.trim() || '1234',
+                storeBio: document.getElementById('set-store-bio').value.trim(),
+                storeAvatar: document.getElementById('set-store-avatar').value.trim() || storeSettings.storeAvatar,
+                tiktok: document.getElementById('set-tiktok').value.trim(),
+                instagram: document.getElementById('set-instagram').value.trim(),
+                youtube: document.getElementById('set-youtube').value.trim()
+            };
+
+            try {
+                const settingsDoc = doc(db, 'artifacts', appId, 'public', 'data', 'settings', 'store_profile');
+                await setDoc(settingsDoc, newSettings);
+                closeSettingsModal();
+                showToast('Profil & link media sosial berhasil disimpan!', 'success');
+            } catch (error) {
+                console.error("Save settings error:", error);
+                showToast('Gagal menyimpan pengaturan ke cloud.', 'error');
+            }
+        }
+
+        // --- 10. CRUD PRODUK & AUTO-FETCH GAMBAR DARI LINK SHOPEE ---
+        function openProductModal(id = null) {
+            const modal = document.getElementById('modal-product');
+            const title = document.getElementById('modal-product-title');
+            const form = document.getElementById('product-form');
+            form.reset();
+
+            if (id) {
+                const prod = products.find(p => p.id === id);
+                if (!prod) return;
+                title.textContent = `Edit Produk #${prod.code}`;
+                document.getElementById('prod-id').value = prod.id;
+                document.getElementById('prod-link').value = prod.link;
+                document.getElementById('prod-image').value = prod.image;
+                document.getElementById('prod-code').value = prod.code;
+                document.getElementById('prod-name').value = prod.name;
+                document.getElementById('prod-category').value = prod.category;
+                document.getElementById('prod-platform').value = prod.platform || 'Shopee';
+                document.getElementById('prod-price').value = prod.price || '';
+                document.getElementById('prod-badge').value = prod.badge || '';
+                updateImagePreview(prod.image);
+            } else {
+                title.textContent = 'Tambah Produk Shopee Baru';
+                document.getElementById('prod-id').value = '';
+                const nextNum = String(products.length + 1).padStart(3, '0');
+                document.getElementById('prod-code').value = nextNum;
+                updateImagePreview('');
+            }
+
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeProductModal() {
+            const modal = document.getElementById('modal-product');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        function updateImagePreview(url) {
+            const img = document.getElementById('prod-img-preview');
+            img.src = url || 'https://placehold.co/200x200/eef2ff/4f46e5?text=Shopee';
+        }
+
+        async function autoFetchFromLink() {
+            const linkInput = document.getElementById('prod-link').value.trim();
+            if (!linkInput) {
+                showToast('Tempel link affiliate Shopee terlebih dahulu!', 'error');
+                return;
+            }
+
+            const btn = document.getElementById('btn-fetch-meta');
+            const originalHTML = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = `<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i><span>Memuat...</span>`;
+            lucide.createIcons();
+
+            try {
+                const response = await fetch(`https://api.microlink.io?url=${encodeURIComponent(linkInput)}`);
+                const result = await response.json();
+
+                if (result.status === 'success' && result.data) {
+                    const { title, image } = result.data;
+                    
+                    if (image && image.url) {
+                        document.getElementById('prod-image').value = image.url;
+                        updateImagePreview(image.url);
+                    }
+                    
+                    if (title && !document.getElementById('prod-name').value) {
+                        const cleanTitle = title.replace(/\| Shopee Indonesia|Jual /gi, '').trim();
+                        document.getElementById('prod-name').value = cleanTitle;
+                    }
+
+                    if (image && image.url) {
+                        showToast('Foto & info produk Shopee berhasil diambil!', 'success');
+                    } else {
+                        showToast('Link terbaca, silakan salin URL gambar manual jika terproteksi.', 'info');
+                    }
+                } else {
+                    throw new Error('Gagal mengambil metadata');
+                }
+            } catch (error) {
+                showToast('Link Shopee terproteksi, silakan paste URL gambar secara manual.', 'info');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = originalHTML;
+                lucide.createIcons();
+            }
+        }
+
+        async function saveProduct(e) {
+            e.preventDefault();
+            if (!currentUser) return;
+
+            const btn = document.getElementById('btn-save-product');
+            btn.disabled = true;
+            btn.textContent = 'Menyimpan...';
+
+            const id = document.getElementById('prod-id').value;
+            const productData = {
+                code: document.getElementById('prod-code').value.trim(),
+                name: document.getElementById('prod-name').value.trim(),
+                category: document.getElementById('prod-category').value.trim(),
+                platform: document.getElementById('prod-platform').value,
+                price: document.getElementById('prod-price').value.trim(),
+                badge: document.getElementById('prod-badge').value,
+                image: document.getElementById('prod-image').value.trim(),
+                link: document.getElementById('prod-link').value.trim()
+            };
+
+            try {
+                const productsCol = collection(db, 'artifacts', appId, 'public', 'data', 'products');
+                if (id) {
+                    const prodRef = doc(db, 'artifacts', appId, 'public', 'data', 'products', id);
+                    await updateDoc(prodRef, productData);
+                    showToast('Perubahan produk disimpan ke cloud!', 'success');
+                } else {
+                    await addDoc(productsCol, {
+                        ...productData,
+                        clicks: 0,
+                        createdAt: Date.now()
+                    });
+                    showToast('Produk Shopee baru ditambahkan!', 'success');
+                }
+                closeProductModal();
+            } catch (error) {
+                console.error("Save product error:", error);
+                showToast('Gagal menyimpan produk.', 'error');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Simpan Produk';
+            }
+        }
+
+        // --- 11. HAPUS & BACKUP DATA ---
+        function askDeleteProduct(id) {
+            const prod = products.find(p => p.id === id);
+            if (!prod) return;
+            productToDeleteId = id;
+            document.getElementById('delete-product-name').textContent = `Anda akan menghapus "#${prod.code} - ${prod.name}".`;
+            
+            const modal = document.getElementById('modal-delete');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+
+            document.getElementById('confirm-delete-btn').onclick = async () => {
+                if (!currentUser || !productToDeleteId) return;
+                try {
+                    const prodRef = doc(db, 'artifacts', appId, 'public', 'data', 'products', productToDeleteId);
+                    await deleteDoc(prodRef);
+                    closeDeleteModal();
+                    showToast('Produk telah dihapus dari cloud.', 'success');
+                } catch (err) {
+                    showToast('Gagal menghapus produk.', 'error');
+                }
+            };
+        }
+
+        function closeDeleteModal() {
+            const modal = document.getElementById('modal-delete');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            productToDeleteId = null;
+        }
+
+        function exportData() {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(products, null, 2));
+            const dlAnchor = document.createElement('a');
+            dlAnchor.setAttribute("href", dataStr);
+            dlAnchor.setAttribute("download", "backup_banding_in_shopee.json");
+            document.body.appendChild(dlAnchor);
+            dlAnchor.click();
+            dlAnchor.remove();
+            showToast('File backup JSON berhasil diunduh!', 'success');
+        }
+
+        // --- 12. TOAST NOTIFICATION ---
+        function showToast(message, type = 'default') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            
+            let bgClass = 'bg-slate-900 text-white';
+            if (type === 'success') bgClass = 'bg-emerald-600 text-white';
+            if (type === 'error') bgClass = 'bg-rose-600 text-white';
+            if (type === 'info') bgClass = 'bg-brand-600 text-white';
+
+            toast.className = `${bgClass} px-4 py-3 rounded-2xl shadow-lg text-xs font-medium flex items-center justify-between gap-2 pointer-events-auto animate-fade-in-up`;
+            toast.innerHTML = `<span>${message}</span>`;
+
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateY(-10px)';
+                toast.style.transition = 'all 0.3s ease';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // Expose fungsi ke global window
+        Object.assign(window, {
+            switchView,
+            shareStore,
+            openLoginModal,
+            closeLoginModal,
+            handleAdminLogin,
+            logoutAdmin,
+            openSettingsModal,
+            closeSettingsModal,
+            saveStoreSettings,
+            openProductModal,
+            closeProductModal,
+            updateImagePreview,
+            autoFetchFromLink,
+            saveProduct,
+            askDeleteProduct,
+            closeDeleteModal,
+            exportData,
+            selectCategory,
+            clearSearch,
+            resetFilters,
+            handleAffiliateClick,
+            toggleLike
+        });
+
+        // Jalankan aplikasi
+        initApp();
+    </script>
+</body>
+</html>
